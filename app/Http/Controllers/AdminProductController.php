@@ -20,6 +20,11 @@ class AdminProductController extends Controller
     public function create()
     {
         return view('admin/product/detail', [
+            'product_name' => '',
+            'product_explain' => '',
+            'price' => '',
+            'url' => '',
+            'image_url' => '',
             'action' => '/admin/product/store'
         ]);
     }
@@ -43,13 +48,30 @@ class AdminProductController extends Controller
     
     public function edit(int $id, Request $request)
     {
+        $product = Product::find($id);
         return view('admin/product/detail', [
+            'product_name' => $product['name'],
+            'product_explain' => $product['explain'],
+            'price' => $product['price'],
+            'url' => $product['url'],
+            'image_url' => $product['image_url'],
             'action' => '/admin/product/update/' . $id
         ]);
     }
     
     public function update(int $id, Request $request)
     {
+        $product = Product::find($id);
+        $product->name = $request->product_name;
+        $product->brand_id = 1;
+        $product->price = $request->price;
+        
+        $product->explain = $request->product_explain;
+        $product->url = $request->input('url');
+        $product->image_url = $request->input('image_url');
+        
+        $product->update();
+        
         return redirect('/admin/product');
     }
     
