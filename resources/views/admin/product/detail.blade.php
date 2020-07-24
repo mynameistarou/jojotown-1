@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>商品追加フォーム</h1>
-        <form action="/product/store" method="post">
+        <form action="{{ $action }}" method="post">
             @csrf
             <div>
                 <label for="product_name">商品名</label>

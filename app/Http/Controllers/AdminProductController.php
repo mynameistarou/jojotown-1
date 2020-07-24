@@ -12,9 +12,16 @@ class AdminProductController extends Controller
         $this->middleware('auth');
     }
     
+    public function index()
+    {
+        return view('admin/product/index');
+    }
+    
     public function create()
     {
-        return view('admin/product/create');
+        return view('admin/product/detail', [
+            'action' => '/admin/product/store'
+        ]);
     }
     
     public function store(Request $request)
@@ -31,6 +38,23 @@ class AdminProductController extends Controller
         
         $product->save();
         
-        return redirect('/');
+        return redirect('/admin/product');
+    }
+    
+    public function edit(int $id, Request $request)
+    {
+        return view('admin/product/detail', [
+            'action' => '/admin/product/update/' . $id
+        ]);
+    }
+    
+    public function update(int $id, Request $request)
+    {
+        return redirect('/admin/product');
+    }
+    
+    public function destroy(int $id)
+    {
+        return redirect('/admin/product');
     }
 }

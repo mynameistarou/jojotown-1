@@ -24,5 +24,6 @@
                 @csrf
             </form>
         </div>
+        <div><a href="/admin/product">管理機能へ</a></div>
     </body>
 </html>
