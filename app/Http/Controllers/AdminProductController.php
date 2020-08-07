@@ -30,7 +30,7 @@ class AdminProductController extends Controller
             'price' => '',
             'url' => '',
             'image_url' => '',
-            'brand_id' => count($brands) > 0 ? $brands[0] : 0,
+            'brand_id' => count($brands) > 0 ? $brands[0]['id'] : 0,
             'action' => '/admin/product/store',
             'brands' => $brands,
         ]);
