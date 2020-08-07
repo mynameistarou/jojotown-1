@@ -13,11 +13,21 @@ class AdminProductController extends Controller
         $this->middleware('auth');
     }
 
-     public function index()
+     public function index(Request $request)
     {
-        $products = Product::all();
+        $query = Product::query();
+        // 空文字は「全てのブランド」とする
+        $brand_id = '';
+        if (!empty($request->brand_id)) {
+            $brand_id = $request->brand_id;
+            $query = $query->where('brand_id', $brand_id);
+        }
+        $products = $query->get();
+        $brands = Brand::all();
         return view('admin/product/index', [
-            'products' => $products
+            'products' => $products,
+            'brand_id' => $brand_id,
+            'brands' => $brands,
         ]);
     }
 
