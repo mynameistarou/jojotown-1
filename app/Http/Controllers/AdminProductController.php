@@ -13,7 +13,7 @@ class AdminProductController extends Controller
         $this->middleware('auth');
     }
 
-     public function index(Request $request)
+    public function index(Request $request)
     {
         $query = Product::query();
         // 空文字は「全てのブランド」とする
