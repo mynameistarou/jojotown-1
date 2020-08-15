@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\Brand;
 use App\Trend;
+use App\TrendProduct;
 
 class AdminProductController extends Controller
 {
@@ -41,7 +42,7 @@ class AdminProductController extends Controller
             'url' => '',
             'image_url' => '',
             'brand_id' => count($brands) > 0 ? $brands[0]['id'] : 0,
-            'trend_id' => count($trends) > 0 ? $trends[0]['id'] : 0,
+            'trend_ids' => [],
             'action' => '/admin/product/store',
             'brands' => $brands,
             'trends' => $trends,
@@ -53,7 +54,6 @@ class AdminProductController extends Controller
         $product = new Product;
         $product->name = $request->product_name;
         $product->brand_id = $request->brand_id;
-        $product->trend_id = $request->trend_id;
         $product->price = $request->price;
 
         $product->explain = $request->product_explain;
@@ -62,6 +62,14 @@ class AdminProductController extends Controller
 
 
         $product->save();
+        
+        foreach ($request->trend_ids as $trend_id) {
+            $trend_product = new TrendProduct;
+            $trend_product->product_id = $product->id;
+            $trend_product->trend_id = $trend_id;
+            
+            $trend_product->save();
+        }
 
         return redirect('/admin/product');
     }
@@ -71,13 +79,14 @@ class AdminProductController extends Controller
         $product = Product::find($id);
         $brands = Brand::all();
         $trends = Trend::all();
+        $trend_ids = TrendProduct::where('product_id', $id)->pluck('trend_id')->all();
         return view('admin/product/detail', [
             'product_name' => $product['name'],
             'product_explain' => $product['explain'],
             'price' => $product['price'],
             'url' => $product['url'],
             'brand_id' => $product['brand_id'],
-            'trend_id' => $product['trend_id'],
+            'trend_ids' => $trend_ids,
             'image_url' => $product['image_url'],
             'action' => '/admin/product/update/' . $id,
             'brands' => $brands,
@@ -90,7 +99,6 @@ class AdminProductController extends Controller
         $product = Product::find($id);
         $product->name = $request->product_name;
         $product->brand_id = $request->brand_id;
-        $product->trend_id = $request->trend_id;
         $product->price = $request->price;
 
         $product->explain = $request->product_explain;
@@ -98,6 +106,16 @@ class AdminProductController extends Controller
         $product->image_url = $request->input('image_url');
 
         $product->update();
+
+        TrendProduct::where('product_id', $id)->delete();
+        
+        foreach ($request->trend_ids as $trend_id) {
+            $trend_product = new TrendProduct;
+            $trend_product->product_id = $product->id;
+            $trend_product->trend_id = $trend_id;
+            
+            $trend_product->save();
+        }
 
         return redirect('/admin/product');
     }
