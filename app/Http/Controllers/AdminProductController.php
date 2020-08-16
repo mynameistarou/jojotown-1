@@ -18,15 +18,27 @@ class AdminProductController extends Controller
     public function index(Request $request)
     {
         $query = Product::query();
+        if (!empty($request->freeword)) {
+            $query = $query->where('name', 'like', '%' . $request->freeword . '%');
+        }
         if (!empty($request->brand_id)) {
             $query = $query->where('brand_id', $request->brand_id);
         }
+        if (!empty($request->trend_id)) {
+            $query = $query->join('trend_products', 'products.id', '=', 'trend_products.product_id');
+            $query = $query->where('trend_products.trend_id', $request->trend_id);
+        }
         $products = $query->get();
         $brands = Brand::all();
+        $trends = Trend::all();
         return view('admin/product/index', [
             'products' => $products,
+            'freeword' => $request->freeword,
             'brand_id' => $request->brand_id,
+            'trend_id' => $request->trend_id,
             'brands' => $brands,
+            'freeword' => $request->freeword,
+            'trends' => $trends,
         ]);
         
     }
