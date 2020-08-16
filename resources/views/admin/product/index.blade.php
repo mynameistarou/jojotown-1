@@ -36,6 +36,7 @@
                     <div class="man_list">
                         <p>
                         <a class="btn btn-link" href="/admin/product/edit/{{ $product['id'] }}">
+                            {{ $product['brand']['name'] }}
                             {{ $product['name'] }}
                        </a>  
                     　 <a class="btn btn-link" href="/admin/product/destroy/{{ $product['id'] }}">

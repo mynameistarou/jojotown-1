@@ -79,7 +79,12 @@ class AdminProductController extends Controller
         $product = Product::find($id);
         $brands = Brand::all();
         $trends = Trend::all();
-        $trend_ids = TrendProduct::where('product_id', $id)->pluck('trend_id')->all();
+        $trend_ids = array_map(
+            function ($trend) {
+                return $trend['id'];
+            },
+            $product['trends']->all()
+        );
         return view('admin/product/detail', [
             'product_name' => $product['name'],
             'product_explain' => $product['explain'],
